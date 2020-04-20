@@ -37,6 +37,7 @@ Network yml2network(std::string filename) {
     YAML::Node layer_offsets = offsets[i];
     int next_layer_size = topology[i];
 
+
     // populate the next layer
     std::vector<Network::Node*> next_layer;
     next_layer.resize(next_layer_size);
@@ -60,6 +61,8 @@ Network yml2network(std::string filename) {
         next_layer[k]->type = Network::sum;
       }
     }
+
+    std::cout << current_layer.size() << std::endl;
 
     /* this next section sets up the activation layer */
 
@@ -91,6 +94,7 @@ Network yml2network(std::string filename) {
       }
     }
     // move to the next layer
+    /* current_layer = std::move(next_layer_activ); */
     current_layer = std::move(next_layer_activ);
   }
 
