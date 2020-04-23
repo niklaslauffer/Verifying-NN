@@ -7,13 +7,14 @@
 #include <assert.h>
 
 
-void Network::Node::update_value() {
+template <typename T>
+void Network<T>::Node::update_value() {
   // check if we're at a root node
   if (this->parents.size() == 0) {
     std::cerr << "Shouldn't call update_value() on an input node!";
   }
-  double total = 0;
   int parent_size = this->parents.size();
+  T total = 0;
   switch (this->type) {
     case sum:
       for (int i = 0; i < parent_size; i ++) {
@@ -45,19 +46,28 @@ void Network::Node::update_value() {
   }
 }
 
-double Network::relu (double x) {
+template <typename T>
+T Network<T>::relu (T x) {
   if (x <= 0)
     return 0;
   else
     return x;
 }
 
-double Network::sigmoid (double x) {
+template <typename T>
+T Network<T>::sigmoid (T x) {
   /* return x / (1 + abs(x)); */
   return 1 / ( 1 + exp(-x));
 }
 
-void Network::set_input_layer(std::vector<Network::Node*> in) {
+template <typename T>
+T Network<T>::tanh (T x) {
+  /* return x / (1 + abs(x)); */
+  return std::tanh(x);
+}
+
+template <typename T>
+void Network<T>::set_input_layer(std::vector<Network::Node*> in) {
   int input_size = in.size();
   input.resize(input_size);
   for (int i = 0; i < input_size; i++) {
@@ -65,7 +75,8 @@ void Network::set_input_layer(std::vector<Network::Node*> in) {
   }
 }
 
-std::vector<double> Network::eval(std::vector<double>& input) {
+template <typename T>
+std::vector<T> Network<T>::eval(std::vector<T>& input) {
 
   // populate the input layer with values
   int size = this->input.size();
@@ -118,3 +129,5 @@ std::vector<double> Network::eval(std::vector<double>& input) {
   }
   return return_vec;
 }
+
+template class Network<double>;

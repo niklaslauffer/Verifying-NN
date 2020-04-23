@@ -17,7 +17,7 @@ int main () {
     double goal_pos = .45;
     int step_limit = 116;
 
-    Network net = yml2network("sig16x16.yml");
+    Network<double> net = yml2network<double>("sig16x16.yml");
     double p = init_pos; // position
     double p_next;
     double v = 0; // velocity

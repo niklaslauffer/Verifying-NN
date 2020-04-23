@@ -3,6 +3,7 @@
 
 #include <vector>
 
+template <typename T>
 class Network {
   public:
 
@@ -22,22 +23,22 @@ class Network {
         std::vector<double> child_weights; // weights along the edges to the children
         std::vector<Node*> parents; // pointers to the parents
         std::vector<double> parent_weights; // weights along the edges to the children
-        double value;
+        T value;
 
         void update_value();
     };
 
     void set_input_layer(std::vector<Node*> in);
 
-    std::vector<double> eval(std::vector<double>& input);
+    std::vector<T> eval(std::vector<T>& input);
 
   private:
 
     std::vector<Node*> input;
 
-    static double relu (double x);
-
-    static double sigmoid (double x);
+    static T relu (T x);
+    static T sigmoid (T x);
+    static T tanh (T x);
 };
 
 #endif /* NETWORK_H */
