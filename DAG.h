@@ -36,9 +36,12 @@ class Network {
 
     std::vector<Node*> input;
 
-    static T relu (T x);
-    static T sigmoid (T x);
-    static T tanh (T x);
+    // static T relu (T x);
+    // static T sigmoid (T x);
+    // static T tanh (T x);
 };
+
+double relu (double x);
+double sigmoid (double x);
 
 #endif /* NETWORK_H */

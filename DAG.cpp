@@ -46,25 +46,35 @@ void Network<T>::Node::update_value() {
   }
 }
 
-template <typename T>
-T Network<T>::relu (T x) {
+// /template <typename T>
+// T Network<T>::relu (T x) {
+//   if (x <= 0)
+//     return 0;
+//   else
+//     return x;
+// }
+
+double relu (double x) {
   if (x <= 0)
     return 0;
   else
     return x;
 }
 
-template <typename T>
-T Network<T>::sigmoid (T x) {
-  /* return x / (1 + abs(x)); */
+// template <typename T>
+// T Network<T>::sigmoid (T x) {
+//   /* return x / (1 + abs(x)); */
+//   return 1 / ( 1 + exp(-x));
+// }
+
+double sigmoid(double x){
   return 1 / ( 1 + exp(-x));
 }
 
-template <typename T>
-T Network<T>::tanh (T x) {
-  /* return x / (1 + abs(x)); */
-  return std::tanh(x);
-}
+// template <typename T>
+// T Network<T>::tanh (T x) {
+//   return std::tanh(x);
+// }
 
 template <typename T>
 void Network<T>::set_input_layer(std::vector<Network::Node*> in) {
