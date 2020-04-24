@@ -2,6 +2,7 @@
 #define NETWORK_H
 
 #include <vector>
+#include "aa_aaf.h"
 
 template <typename T>
 class Network {
@@ -41,7 +42,9 @@ class Network {
     // static T tanh (T x);
 };
 
-double relu (double x);
+double relu (double x) ;
 double sigmoid (double x);
+AAF relu (const AAF &val);
+AAF sigmoid (const AAF &val);
 
 #endif /* NETWORK_H */

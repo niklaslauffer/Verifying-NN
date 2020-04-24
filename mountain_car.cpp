@@ -5,6 +5,7 @@
 
 #include "build_network.h"
 #include "DAG.h"
+#include "aa_aaf.h"
 
 int main () {
 
@@ -17,11 +18,12 @@ int main () {
     double goal_pos = .45;
     int step_limit = 116;
 
-    Network<double> net = yml2network<double>("sig16x16.yml");
+    // Network<double> net = yml2network<double>("sig16x16.yml");
+    Network<AAF> net = yml2network<AAF>("sig16x16.yml");
     double p = init_pos; // position
     double p_next;
     double v = 0; // velocity
-    double v_next; 
+    double v_next;
     double reward = 0;
     double reward_next;
     double u; // control
@@ -34,10 +36,13 @@ int main () {
       std::cout << "Position: " << p << std::endl;
       std::cout << "Reward: " << reward << std::endl;
 
-      std::vector<double> nn_input = {p, v};
-      std::vector<double> nn_output = net.eval(nn_input);
+      // std::vector<double> nn_input = {p, v};
+      // std::vector<double> nn_output = net.eval(nn_input);
+      std::vector<AAF> nn_input = {p, v};
+      std::vector<AAF> nn_output = net.eval(nn_input);
 
-      u = nn_output[0];
+      // u = nn_output[0];
+      u = nn_output[0].getcenter();
       std::cout << "Control: " << u << std::endl;
 
       if (reached_goal) {
@@ -54,7 +59,7 @@ int main () {
           reached_goal = 1;
       }
 
-      if (p_next < -1.2) 
+      if (p_next < -1.2)
         p = -1.2;
       else if (p_next > .6)
         p = .6;
@@ -65,7 +70,7 @@ int main () {
         v = -0.07;
       else if (v_next > 0.07)
         v = 0.07;
-      else 
+      else
         v = v_next;
 
       reward = reward_next;

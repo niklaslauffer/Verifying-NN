@@ -1,11 +1,10 @@
 #include "DAG.h"
-#include <math.h>
 
 #include <vector>
 #include <iostream>
 
 #include <assert.h>
-
+#include <math.h>
 
 template <typename T>
 void Network<T>::Node::update_value() {
@@ -76,6 +75,24 @@ double sigmoid(double x){
 //   return std::tanh(x);
 // }
 
+/************************************************************
+ * Method:        relu
+ ************************************************************/
+AAF relu (const AAF &val)
+{
+  if (val <= 0)
+    return AAF(0.0);
+  return AAInterval(0, val.getMax());
+}
+
+/************************************************************
+ * Method:        sigmoid
+ ************************************************************/
+AAF sigmoid (const AAF &val)
+{
+  return 1.0 / (1 + exp(-val));
+}
+
 template <typename T>
 void Network<T>::set_input_layer(std::vector<Network::Node*> in) {
   int input_size = in.size();
@@ -132,7 +149,7 @@ std::vector<T> Network<T>::eval(std::vector<T>& input) {
     /* prev_layer = std::move(next_layer); */
     prev_layer = next_layer;
   }
-  std::vector<double> return_vec;
+  std::vector<T> return_vec;
   return_vec.resize(prev_layer.size());
   for (int i = 0; i < prev_layer.size(); i++) {
     return_vec[i] = prev_layer[i]->value;
@@ -141,3 +158,4 @@ std::vector<T> Network<T>::eval(std::vector<T>& input) {
 }
 
 template class Network<double>;
+template class Network<AAF>;
