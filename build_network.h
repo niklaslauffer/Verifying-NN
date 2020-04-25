@@ -39,13 +39,13 @@ Network<T> yml2network(std::string filename) {
     // get info for this layer
     YAML::Node layer_weights = weights[i];
     YAML::Node layer_offsets = offsets[i];
-    int next_layer_size = topology[i];
+    std::size_t next_layer_size = topology[i];
 
 
     // populate the next layer
     std::vector<typename Network<T>::Node*> next_layer;
     next_layer.resize(next_layer_size);
-    for (int k = 0; k < next_layer_size; k++) {
+    for (std::size_t k = 0; k < next_layer_size; k++) {
       next_layer[k] = new typename Network<T>::Node();
     }
     // set biases of the next layer
@@ -73,7 +73,7 @@ Network<T> yml2network(std::string filename) {
     // populate the activation layer
     next_layer_activ.clear();
     next_layer_activ.resize(next_layer_size);
-    for (int k = 0; k < next_layer_size; k++) {
+    for (std::size_t k = 0; k < next_layer_size; k++) {
       next_layer_activ[k] = new typename Network<T>::Node();
     }
     // add connections between next_layer and next_layer_activ

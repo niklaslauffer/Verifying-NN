@@ -151,7 +151,7 @@ std::vector<T> Network<T>::eval(std::vector<T>& input) {
   }
   std::vector<T> return_vec;
   return_vec.resize(prev_layer.size());
-  for (int i = 0; i < prev_layer.size(); i++) {
+  for (std::size_t i = 0; i < prev_layer.size(); i++) {
     return_vec[i] = prev_layer[i]->value;
   }
   return return_vec;

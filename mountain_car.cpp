@@ -54,7 +54,7 @@ int main () {
       v_next = v + 0.0015 * u - 0.0025 * cos(3 * p);
 
       reward_next = reward - 0.1*pow(u,2);
-      if (!reached_goal & p > goal_pos) {
+      if (!reached_goal & (p > goal_pos)) {
           reward_next += 100;
           reached_goal = 1;
       }
