@@ -13,6 +13,7 @@ class Network {
       sum,
       sigmoid_act,
       relu_act,
+      softmax,
       tanh_act
     };
 
@@ -36,6 +37,7 @@ class Network {
   private:
 
     std::vector<Node*> input;
+    void apply_softmax(std::vector<Node*> next_layer, std::vector<Node*> prev_layer);
 
     // static T relu (T x);
     // static T sigmoid (T x);
@@ -44,7 +46,9 @@ class Network {
 
 double relu (double x) ;
 double sigmoid (double x);
+double softmax (double x);
 AAF relu (const AAF &val);
 AAF sigmoid (const AAF &val);
+AAF softmax (const AAF &val);
 
 #endif /* NETWORK_H */

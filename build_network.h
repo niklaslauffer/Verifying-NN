@@ -12,22 +12,25 @@ template <typename T>
 Network<T> yml2network(std::string filename) {
   YAML::Node config = YAML::LoadFile(filename);
 
-  // write now the topology is hard coded
-  std::vector<int> topology {2,16,16,1};
-  int input_size = topology[0];
-
-  Network<T> net = Network<T>();
-
   // get parameters from the YAML file
   YAML::Node weights =  config["weights"];
   YAML::Node offsets =  config["offsets"];
   YAML::Node activations =  config["activations"];
 
+  // right now the topology is hard coded
+  size_t input_size = weights[1][0].size();
+  std::vector<size_t> topology {input_size};
+  for (std::size_t i = 1; i <= offsets.size(); i ++) {
+    topology.push_back(offsets[i].size());
+  }
+
+  Network<T> net = Network<T>();
+
   // construct the input layer
   std::vector<typename Network<T>::Node*> current_layer;
   current_layer.resize(input_size);
   // construct the input nodes
-  for (int i = 0; i < input_size; i++) {
+  for (std::size_t i = 0; i < input_size; i++) {
     current_layer[i] = new typename Network<T>::Node();
   }
   net.set_input_layer(current_layer);
@@ -66,7 +69,7 @@ Network<T> yml2network(std::string filename) {
       }
     }
 
-    std::cout << current_layer.size() << std::endl;
+    /* std::cout << current_layer.size() << std::endl; */
 
     /* this next section sets up the activation layer */
 
@@ -92,6 +95,12 @@ Network<T> yml2network(std::string filename) {
       }
       else if (activ_type.compare("Tanh") == 0) {
         next_layer_activ[k]->type = Network<T>::tanh_act;
+      }
+      else if (activ_type.compare("Relu") == 0) {
+        next_layer_activ[k]->type = Network<T>::relu_act;
+      }
+      else if (activ_type.compare("Softmax") == 0) {
+        next_layer_activ[k]->type = Network<T>::softmax;
       }
       else {
         std::cerr << "Unsupported activation function type";

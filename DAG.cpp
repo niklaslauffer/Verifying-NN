@@ -59,7 +59,6 @@ double relu (double x) {
   else
     return x;
 }
-
 // template <typename T>
 // T Network<T>::sigmoid (T x) {
 //   /* return x / (1 + abs(x)); */
@@ -93,6 +92,9 @@ AAF sigmoid (const AAF &val)
   return 1.0 / (1 + exp(-val));
 }
 
+/************************************************************
+ * Method:        softmax
+ ************************************************************/
 template <typename T>
 void Network<T>::set_input_layer(std::vector<Network::Node*> in) {
   int input_size = in.size();
@@ -121,6 +123,7 @@ std::vector<T> Network<T>::eval(std::vector<T>& input) {
     prev_layer[i] = this->input[i];
   }
   while (prev_layer[0]->children.size() != 0) {
+
     /* std::cout << "Updating layer of type: " << prev_layer[0]->children[0]->type << std::endl; */
     if (prev_layer[0]->children[0]->type == Network::sum) {
       /* next_layer = std::move(prev_layer[0]->children); */
@@ -130,6 +133,18 @@ std::vector<T> Network<T>::eval(std::vector<T>& input) {
       for (int i = 0; i < next_size; i++) {
         next_layer[i]->update_value();
       }
+    }
+    // check if this is a softmax layer
+    else if (prev_layer[0]->children[0]->type == Network::softmax) {
+      int next_size = prev_layer.size();
+      /* std::cout << "next layer size: " << next_size << std::endl; */
+      next_layer.resize(next_size);
+      // this computation is value specific
+      for (int i = 0; i < next_size; i++) {
+        next_layer[i] = prev_layer[i]->children[0];
+        assert(prev_layer[i]->children.size() == 1);
+      }
+      apply_softmax(next_layer, prev_layer);
     }
     else { // otherwise it's an activation layer
       int next_size = prev_layer.size();
@@ -141,10 +156,7 @@ std::vector<T> Network<T>::eval(std::vector<T>& input) {
       }
       for (int i = 0; i < next_size; i++) {
         next_layer[i]->update_value();
-        /* std::cout << "Input: " << prev_layer[i]->value << std::endl; */
-        /* std::cout << "Output: " << next_layer[i]->value << std::endl; */
       }
-
     }
     /* prev_layer = std::move(next_layer); */
     prev_layer = next_layer;
@@ -156,6 +168,19 @@ std::vector<T> Network<T>::eval(std::vector<T>& input) {
   }
   return return_vec;
 }
+
+template <typename T>
+void Network<T>::apply_softmax(std::vector<Network::Node*> next_layer, std::vector<Network::Node*> prev_layer) {
+  size_t layer_size = prev_layer.size();
+  T total_value = 0;
+  for (size_t i = 0; i < layer_size; i++) {
+    total_value = total_value + exp(prev_layer[i]->value);
+  }
+  for (size_t i = 0; i < layer_size; i++) {
+    next_layer[i]->value = exp(prev_layer[i]->value) / total_value;
+  }
+}
+
 
 template class Network<double>;
 template class Network<AAF>;
