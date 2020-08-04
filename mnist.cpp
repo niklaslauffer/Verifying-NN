@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <math.h>
 #include <time.h>
@@ -15,7 +16,7 @@ int main () {
 
     std::vector<double> nn_input;
     fstream file;
-    file.open("mnist_example.txt",ios::in); //open a file to perform read operation using file object
+    file.open("mnist_example3.txt",ios::in); //open a file to perform read operation using file object
     if (file.is_open()){   //checking whether the file is open
        string tp;
        while(getline(file, tp)){ //read data from file object and put it into string.
@@ -26,11 +27,13 @@ int main () {
 
     std::vector<double> nn_output = net.eval(nn_input);
 
+    ofstream outfile;
+    outfile.open("mnist_example3_softmax.txt");
+
     // Print output
     for (size_t i = 0; i < nn_output.size(); i++) { 
-      std::cout << i << ") " << nn_output[i] << "\n";
+      outfile << i << ") " << nn_output[i] << "\n";
     }
 
     return 0;
 }
-
