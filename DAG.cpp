@@ -73,6 +73,11 @@ double sigmoid(double x){
 // T Network<T>::tanh (T x) {
 //   return std::tanh(x);
 // }
+//
+//
+double tanh (double x) {
+  return (exp(2*x) -1) / (exp(2*x)+1);
+}
 
 /************************************************************
  * Method:        relu

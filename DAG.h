@@ -46,6 +46,7 @@ class Network {
 
 double relu (double x) ;
 double sigmoid (double x);
+double tanh (double x);
 double softmax (double x);
 AAF relu (const AAF &val);
 AAF sigmoid (const AAF &val);

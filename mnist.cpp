@@ -12,7 +12,8 @@
 
 int main () {
 
-    Network<double> net = yml2network<double>("mnist_deep_nn/mnist_mlp_sigmoid.yml");
+    /* Network<double> net = yml2network<double>("mnist_deep_nn/mnist_mlp_sigmoid.yml"); */
+    Network<double> net = yml2network<double>("mnist_mlp_tanh.yaml");
 
     std::vector<double> nn_input;
     fstream file;
@@ -27,12 +28,15 @@ int main () {
 
     std::vector<double> nn_output = net.eval(nn_input);
 
-    ofstream outfile;
-    outfile.open("mnist_example3_softmax.txt");
+    /* ofstream outfile; */
+    /* outfile.open("mnist_example3_softmax.txt"); */
 
     // Print output
+    /* for (size_t i = 0; i < nn_output.size(); i++) { */ 
+    /*   outfile << i << ") " << nn_output[i] << "\n"; */
+    /* } */
     for (size_t i = 0; i < nn_output.size(); i++) { 
-      outfile << i << ") " << nn_output[i] << "\n";
+      std::cout << i << ") " << nn_output[i] << "\n";
     }
 
     return 0;

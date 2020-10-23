@@ -99,7 +99,7 @@ Network<T> yml2network(std::string filename) {
       else if (activ_type.compare("Relu") == 0) {
         next_layer_activ[k]->type = Network<T>::relu_act;
       }
-      else if (activ_type.compare("Softmax") == 0) {
+      else if (activ_type.compare("Softmax") == 0 || activ_type.compare("Linear") == 0) {
         next_layer_activ[k]->type = Network<T>::softmax;
       }
       else {
