@@ -93,7 +93,27 @@ X_train = X_train.reshape((X_train.shape[0], X_train.shape[1]*X_train.shape[2]))
 print(X_train.shape)
 print(y_train.shape)
 
+######### output samples
+
+found_samples = np.zeros(14)
+
+for x,y in zip(X_train, y_train):
+    y_index = np.where(y == 1)[0][0]
+    if found_samples[y_index] == 1:
+        continue
+    else:
+        found_samples[y_index] = 1
+        with open('wildlife_examples/' + str(y_index) + '.txt', 'w') as f:
+            for i in x:
+                f.write(str(i) + "\n")
+        # np.save('wildlife_examples/' + str(y_index) + '.npy',y_index)
+
+quit()
+
+#########
+
 NUM_CLASSES = 14
+
 
 # dense_network = DenseNet121(input_shape = (32, 32, 3), include_top = False, classes = 1000)
 # model = Sequential()
