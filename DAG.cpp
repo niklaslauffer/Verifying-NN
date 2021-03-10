@@ -133,7 +133,13 @@ AAF relu (const AAF &val)
 AAF sigmoid (const AAF &val)
 {
   // std::cout << "Sigmoid" << std::endl;
-  return 1.0 / (1 + exp(-val));
+  AAF expVal = exp(-val);
+  // if (expVal.getMin() <= 0){
+  //   double maxVal = 1.0 + expVal.getMax();
+  //   std::out << AAF(AAInterval(1.0/maxVal, 1.0)) << std::endl;
+  //   return AAF(AAInterval(1.0/maxVal, 1.0));
+  // }
+  return 1.0 / (1 + expVal);
 }
 
 /************************************************************
@@ -213,17 +219,6 @@ std::vector<T> Network<T>::eval(std::vector<T>& input) {
   return return_vec;
 }
 
-template <typename T>
-void Network<T>::apply_softmax(std::vector<Network::Node*> next_layer, std::vector<Network::Node*> prev_layer) {
-  size_t layer_size = prev_layer.size();
-  T total_value = 0;
-  for (size_t i = 0; i < layer_size; i++) {
-    total_value = total_value + exp(prev_layer[i]->value);
-  }
-  for (size_t i = 0; i < layer_size; i++) {
-    next_layer[i]->value = exp(prev_layer[i]->value) / total_value;
-  }
-}
 
 template <>
 void Network<AAF>::apply_softmax(std::vector<Network::Node*> next_layer, std::vector<Network::Node*> prev_layer) {
@@ -244,7 +239,18 @@ void Network<AAF>::apply_softmax(std::vector<Network::Node*> next_layer, std::ve
     next_layer[i]->value = AAF(AAInterval(exp_min/maxTotalVal, exp_max/minTotalVal));
   }
 }
-
-
-template class Network<double>;
 template class Network<AAF>;
+
+template <typename T>
+void Network<T>::apply_softmax(std::vector<Network::Node*> next_layer, std::vector<Network::Node*> prev_layer) {
+  size_t layer_size = prev_layer.size();
+  T total_value = 0;
+  for (size_t i = 0; i < layer_size; i++) {
+    total_value = total_value + exp(prev_layer[i]->value);
+  }
+  for (size_t i = 0; i < layer_size; i++) {
+    // std::cout << "Iter" << std::endl;
+    next_layer[i]->value = exp(prev_layer[i]->value) / total_value;
+  }
+}
+template class Network<double>;
