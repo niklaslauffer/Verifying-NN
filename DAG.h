@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "aa_aaf.h"
+#include "aa_interval.h"
 
 template <typename T>
 class Network {
@@ -51,5 +52,6 @@ double softmax (double x);
 AAF relu (const AAF &val);
 AAF sigmoid (const AAF &val);
 AAF softmax (const AAF &val);
+// AAF tanh ( AAF x);
 
 #endif /* NETWORK_H */

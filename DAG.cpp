@@ -6,6 +6,8 @@
 #include <assert.h>
 #include <math.h>
 
+#include <type_traits>
+
 template <typename T>
 void Network<T>::Node::update_value() {
   // check if we're at a root node
@@ -35,8 +37,43 @@ void Network<T>::Node::update_value() {
       /* std::cout << "relu Out: " << this->value << std::endl; */
       break;
     case tanh_act:
-      /* std::cout << "tanh In: " << this->parents[0]->value << std::endl; */
+      // std::cout << "tanh In: " << this->parents[0]->value << std::endl;
       this->value = tanh(this->parents[0]->value) + this->bias;
+      assert(this->bias == 0);
+      /* std::cout << "tanh Out: " << this->value << std::endl; */
+      break;
+    default:
+      std::cerr << "Unknown node type" << std::endl;
+  }
+}
+
+
+template <> void Network<AAF>::Node::update_value(){
+  int parent_size = this->parents.size();
+  AAF total = 0;
+  switch (this->type) {
+    case sum:
+      for (int i = 0; i < parent_size; i ++) {
+        total += this->parents[i]->value * this->parent_weights[i];
+      }
+      this->value = total + this->bias;
+      /* std::cout << "Sum Out: " << this->value << std::endl; */
+      break;
+    case sigmoid_act:
+      /* std::cout << "Sig In: " << this->parents[0]->value << std::endl; */
+      this->value = sigmoid(this->parents[0]->value) + this->bias;
+      assert(this->bias == 0);
+      /* std::cout << "Sig Out: " << this->value << std::endl; */
+      break;
+    case relu_act:
+      /* std::cout << "relu In: " << this->parents[0]->value << std::endl; */
+      this->value = relu(this->parents[0]->value) + this->bias;
+      assert(this->bias == 0);
+      /* std::cout << "relu Out: " << this->value << std::endl; */
+      break;
+    case tanh_act:
+      // std::cout << "tanh In: " << this->parents[0]->value << std::endl;
+      this->value = tanh_test(this->parents[0]->value) + this->bias;
       assert(this->bias == 0);
       /* std::cout << "tanh Out: " << this->value << std::endl; */
       break;
@@ -75,9 +112,10 @@ double sigmoid(double x){
 // }
 //
 //
-double tanh (double x) {
-  return (exp(2*x) -1) / (exp(2*x)+1);
-}
+// double tanh (double x) {
+//   // std::cout << x << std::endl;
+//   return (exp(2*x) -1) / (exp(2*x)+1);
+// }
 
 /************************************************************
  * Method:        relu
@@ -94,6 +132,7 @@ AAF relu (const AAF &val)
  ************************************************************/
 AAF sigmoid (const AAF &val)
 {
+  // std::cout << "Sigmoid" << std::endl;
   return 1.0 / (1 + exp(-val));
 }
 
@@ -183,6 +222,26 @@ void Network<T>::apply_softmax(std::vector<Network::Node*> next_layer, std::vect
   }
   for (size_t i = 0; i < layer_size; i++) {
     next_layer[i]->value = exp(prev_layer[i]->value) / total_value;
+  }
+}
+
+template <>
+void Network<AAF>::apply_softmax(std::vector<Network::Node*> next_layer, std::vector<Network::Node*> prev_layer) {
+  size_t layer_size = prev_layer.size();
+  AAF total_value = 0;
+  double minTotalVal = 0.0;
+  double maxTotalVal = 0.0;
+  for (size_t i = 0; i < layer_size; i++) {
+    minTotalVal += exp((prev_layer[i]->value).getMin());
+    maxTotalVal += exp((prev_layer[i]->value).getMax());
+    total_value = total_value + exp(prev_layer[i]->value);
+  }
+  minTotalVal = max(minTotalVal, total_value.getMin());
+  maxTotalVal = min(maxTotalVal, total_value.getMax());
+  for (size_t i = 0; i < layer_size; i++) {
+    double exp_min = exp((prev_layer[i]->value).getMin());
+    double exp_max = exp((prev_layer[i]->value).getMax());
+    next_layer[i]->value = AAF(AAInterval(exp_min/maxTotalVal, exp_max/minTotalVal));
   }
 }
 
