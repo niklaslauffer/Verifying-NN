@@ -41,7 +41,7 @@
  * i)  CHEBYSHEV: (a, f(a)) and (b, f(b))
  * ii) MINRANGE:  MIN(f'(a), f'(b))
  *
- * dzeta is the central y-intercept of the parallelogram 
+ * dzeta is the central y-intercept of the parallelogram
  * including (a,f(a) .. b,f(b))
  *
  * delta is the new deviation value being half a hight of
@@ -51,7 +51,7 @@
 /************************************************************
  * Operator:      *
  * Author & Date: ??? - ???
- * Description:   
+ * Description:
  *   computes the affine product (*this * P)
  *
  *   Input  : const AAF & : AAF argument
@@ -94,7 +94,7 @@ AAF AAF::operator * (const AAF & P) const
   AAF Temp(cvalue*P.cvalue);  // Create our resulting AAF
 
   Temp.indexes = new unsigned [l1+l2+1];
-  
+
   unsigned * idtemp=Temp.indexes;
 
   // Fill the indexes array
@@ -107,7 +107,7 @@ AAF AAF::operator * (const AAF & P) const
 
   Temp.length = ltemp + 1;
   Temp.size = Temp.length;
-  
+
   double commonTermCenter = 0.0;
   double commonTermDeviation = 0.0;
 
@@ -117,21 +117,21 @@ AAF AAF::operator * (const AAF & P) const
   {
     unsigned a = pu1 - id1;
     unsigned b = pu2 - id2;
-    
+
     if (a == l1 || id1[a] != idtemp[i])
     {
       vatempg[i] = cvalue*va2[b];  // cvalue*va2[b]+(P.cvalue)*0
       pu2++;
       continue;
     }
-    
+
     if (b == l2 || id2[b] != idtemp[i])
     {
       vatempg[i] = (P.cvalue)*va1[a];  // cvalue*0+(P.cvalue)*va1[a]
       pu1++;
       continue;
     }
-    
+
     vatempg[i] = cvalue*va2[b] + (P.cvalue)*va1[a];
     commonTermCenter += va2[b]*va1[a];
     commonTermDeviation += fabs(va2[b]*va1[a]);
@@ -173,8 +173,8 @@ AAF AAF::operator * (const AAF & P) const
   {
     Temp.deviations[ltemp] = delta;
   }
-  
-  // consider deviations occuring in both expressions  
+
+  // consider deviations occuring in both expressions
   commonTermCenter *= 0.5;
   commonTermDeviation *= 0.5;
   Temp.cvalue += commonTermCenter;
@@ -185,7 +185,7 @@ AAF AAF::operator * (const AAF & P) const
   for (unsigned i = 0; i < Temp.length; i++)
     Temp.radius += fabs(Temp.deviations[i]);
 #endif
-  
+
   return Temp;
 }
 
@@ -193,7 +193,7 @@ AAF AAF::operator * (const AAF & P) const
 /************************************************************
  * Operator:      *=
  * Author & Date: Darius Grabowski - 2006
- * Description:   
+ * Description:
  *   computes the affine product (*this *= P)
  *
  *   Input  : const AAF & : AAF argument
@@ -229,7 +229,7 @@ AAF & AAF::operator *=(const AAF & P)
   unsigned * pu2 = id2;
 
   unsigned * tempIndexes = new unsigned [l1+l2+1];
-  
+
   unsigned * idtemp = tempIndexes;
 
   // Fill the indexes array
@@ -238,7 +238,7 @@ AAF & AAF::operator *=(const AAF & P)
 
   double * tempDeviations = new double [ltemp + 1];
   double * vatempg = tempDeviations;
- 
+
   double commonTermCenter = 0.0;
   double commonTermDeviation = 0.0;
 
@@ -248,21 +248,21 @@ AAF & AAF::operator *=(const AAF & P)
   {
     unsigned a = pu1 - id1;
     unsigned b = pu2 - id2;
-    
+
     if (a == l1 || id1[a] != idtemp[i])
     {
       vatempg[i] = cvalue*va2[b];  // cvalue*va2[b]+(P.cvalue)*0
       pu2++;
       continue;
     }
-    
+
     if (b == l2 || id2[b] != idtemp[i])
     {
       vatempg[i] = (P.cvalue)*va1[a];  // cvalue*0+(P.cvalue)*va1[a]
       pu1++;
       continue;
     }
-    
+
     vatempg[i] = cvalue*va2[b] + (P.cvalue)*va1[a];
     commonTermCenter += va2[b]*va1[a];
     commonTermDeviation += fabs(va2[b]*va1[a]);
@@ -304,13 +304,13 @@ AAF & AAF::operator *=(const AAF & P)
   else
   {
     tempDeviations[ltemp] = delta;
-    // consider deviations occuring in both expressions  
+    // consider deviations occuring in both expressions
     commonTermCenter *= 0.5;
     commonTermDeviation *= 0.5;
     cvalue += commonTermCenter;
     tempDeviations[ltemp] -= commonTermDeviation;
   }
-  
+
   length = ltemp + 1;
   size = length;
 
@@ -325,7 +325,7 @@ AAF & AAF::operator *=(const AAF & P)
   for (unsigned i = 0; i < length; i++)
     radius += fabs(deviations[i]);
 #endif
-  
+
   return *this;
 }
 
@@ -333,7 +333,7 @@ AAF & AAF::operator *=(const AAF & P)
 /************************************************************
  * Operator:      /
  * Author & Date: ??? - ???
- * Description:   
+ * Description:
  *   computes the division, we use the identity x/y = x * (1/y)
  *
  *   Input  : const AAF & : AAF argument
@@ -351,7 +351,7 @@ AAF AAF::operator / (const AAF & P) const
 /************************************************************
  * Operator:      /
  * Author & Date: Darius Grabowski - 10.06.2005
- * Description:   
+ * Description:
  *   computes the division <double> / <AAF>
  *
  *   Input  : double    : divisor
@@ -359,14 +359,14 @@ AAF AAF::operator / (const AAF & P) const
  *   Output : AAF       : AAF result
  ************************************************************/
 AAF operator / (double cst, const AAF P)
-{  
+{
   return inv(P)*cst;
 }
 
 /************************************************************
  * Operator:      ^
  * Author & Date: Darius Grabowski - 10.06.2005
- * Description:   
+ * Description:
  *   computes the power function
  *
  *   Input  : const int : exponent
@@ -391,7 +391,7 @@ AAF AAF::operator ^ (const int exponent) const
   {
     return AAF(1.0);
   }
-  
+
   if (exponent == 1)
   {
     return *this;
@@ -411,8 +411,8 @@ AAF AAF::operator ^ (const int exponent) const
 
   if ( (b*a < EPSILON) && (exponent < 0) )
   {
-    throw(AAF_Exception(AAF_DIVZERO_EXCEPTION, 
-			std::string("Error <AAF::^>: computing zero inversion").c_str(), 
+    throw(AAF_Exception(AAF_DIVZERO_EXCEPTION,
+			std::string("Error <AAF::^>: computing zero inversion").c_str(),
 			a, b));
   }
 
@@ -428,14 +428,14 @@ AAF AAF::operator ^ (const int exponent) const
       // avoid division by zero
       alpha = exponent*fa/(a+EPSILON);
     }
-    
+
     // we have two points having the slope alpha
     double x_1 = -pow(fabs((double)alpha/exponent), (double)1.0/(exponent-1.0));
 
     double x_2 = -x_1;
 
     double fx_1, fx_2;
-    
+
     // check valid points
     if (x_1 > a)
     {
@@ -447,7 +447,7 @@ AAF AAF::operator ^ (const int exponent) const
       x_1 = a;
       fx_1 = fa;
     }
-    
+
     if (x_2 < b)
     {
       // x_2 is valid
@@ -458,12 +458,12 @@ AAF AAF::operator ^ (const int exponent) const
       x_2 = b;
       fx_2 = fb;
     }
-    
+
     double y_2 = fx_2 - alpha*x_2;
     double y_1 = fx_1 - alpha*x_1;
-    
+
     delta = 0.5*(y_1 - y_2);
-    
+
     dzeta = 0.5*(y_1 + y_2);
 #ifdef AAF_DEBUG
     fprintf(stdout, "Function: x^%d\n", exponent);
@@ -487,7 +487,7 @@ AAF AAF::operator ^ (const int exponent) const
     // exp < 0 and exp odd  and [a,b] > 0 : MINRANGE: alpha = f'(b), y0_a > y0_b : e1 = 0 e2 = 0 e3 = 1
     // exp < 0 and exp even and [a,b] < 0 : MINRANGE: alpha = f'(a), y0_b > y0_a : e1 = 0 e2 = 1 e3 = 0
     // exp < 0 and exp odd  and [a,b] < 0 : MINRANGE: alpha = f'(a), y0_a > y0_b : e1 = 0 e2 = 0 e3 = 0
-    
+
     if (b*a < 0.0)
     {
       alpha = 0.0;
@@ -512,12 +512,12 @@ AAF AAF::operator ^ (const int exponent) const
       {
 	alpha = exponent*fb/(b+EPSILON);
       }
-      
+
       double y_a = fa-alpha*a;
       double y_b = fb-alpha*b;
 
       delta = 0.5*fabs(y_a - y_b);
-      
+
       dzeta = 0.5*(y_a + y_b);
 
 #ifdef AAF_DEBUG
@@ -559,8 +559,8 @@ AAF AAF::operator ^ (const int exponent) const
     Temp.indexes[i] = indexes[i];
     Temp.deviations[i] = alpha*(deviations[i]);
   }
-  
-  
+
+
   // Compute the error in a new deviation symbol
   // zk = delta
   Temp.indexes[length] = Temp.inclast();
@@ -604,7 +604,7 @@ AAF AAF::operator ^ (const AAF exp) const
 /************************************************************
  * Method:      aaf_pow
  * Author & Date: Anna Krause - 01.03.2010
- * Description:   
+ * Description:
  *   computes the power function
  *
  *   Input  : AAF	 	: base
@@ -618,9 +618,9 @@ AAF aaf_pow(const AAF & base, const AAF & exp) {
 	unsigned length_b=base.getlength();
 	unsigned length_e=exp.getlength();
 	double min_b=base.getMin();
-	
+
 	const double pi=3.14159265;
-	
+
 // Variables
 	double fx, fy, fc;
 	double dmin, dmax, x1, x2, x3, y1, y2, y3, phi, phi0, phi_max, d1, d2, d3, dyc;
@@ -632,19 +632,19 @@ AAF aaf_pow(const AAF & base, const AAF & exp) {
 	unsigned dev_b, dev_e;
 	unsigned i=0, j=0, last_eps;
 	double alpha, gamma;
-	
+
 // Properties of the resulting aaf
-	unsigned length_r;	
+	unsigned length_r;
 	double * devs_r;
 	unsigned * ind_r;
-		
+
 // Area of validity
 	if( min_b<=0 ){
 		throw(AAF_Exception(AAF_NEGBASE_EXCEPTION,
 			std::string("Error <AAF::aaf_pow>: Exponentiation of negative numbers is only possible for integer exponents and currently not defined in this scope.").c_str(),
 			min_b));
 	}
-	
+
 // Special cases
 	if(length_b==0){
 		if(length_e==0){
@@ -664,7 +664,7 @@ AAF aaf_pow(const AAF & base, const AAF & exp) {
 			return result;
 		}
 	}
-	
+
 	unsigned * ind_e=exp.indexes;
 	double * devs_e=exp.deviations;
 	unsigned * ind_b=base.indexes;
@@ -674,7 +674,7 @@ AAF aaf_pow(const AAF & base, const AAF & exp) {
 	fc=pow(centre_b, centre_e);
 	fx=centre_e*pow(centre_b,(centre_e-1.0));
 	fy=pow(centre_b,centre_e)*log(centre_b);
-	
+
 // Evaluate the edge of the polygon defined by the base and the exponent
 	dmin=0.0;
 	dmax=0.0;
@@ -685,13 +685,13 @@ AAF aaf_pow(const AAF & base, const AAF & exp) {
 	x3=0.0;
 	y3=0.0;
 	last_eps=NULL;
-	
+
 // Merge vector of indexes and construct array for the deviations and the epsilon
 	//TODO: Pr�fen: mehrere unabh�ngige Abweichungssymbole, die nur in einer AAF vorkommen? - sollte egal sein
 	help=new unsigned[length_b+length_e+1];
 	merge=std::set_union(ind_b,ind_b+length_b,ind_e,ind_e+length_e,help);
 	length_r=merge-help+1;
-	
+
 	dev_b=0;
 	dev_e=0;
 	dev_array_b=new double[length_r-1];
@@ -706,7 +706,7 @@ AAF aaf_pow(const AAF & base, const AAF & exp) {
 		else{
 			dev_array_b[i]=0.0;
 		}
-		
+
 		if(dev_e<length_e && ind_e[dev_e]==help[i]){
 			dev_array_e[i]=devs_e[dev_e];
 			dev_e++;
@@ -714,7 +714,7 @@ AAF aaf_pow(const AAF & base, const AAF & exp) {
 		else{
 			dev_array_e[i]=0.0;
 		}
-		
+
 		// Write epsilon vector
 		if(dev_array_b[i]>0)
 			eps_vec[i]=-1.0;
@@ -727,50 +727,50 @@ AAF aaf_pow(const AAF & base, const AAF & exp) {
 				eps_vec[i]=1.0;
 		}
 	}
-	
+
 // Find minimum and maximum distance between taylor series and exponentiation
 	for(i=0; i<(length_r-1); i++){
 		x1+=eps_vec[i]*dev_array_b[i];
 		y1+=eps_vec[i]*dev_array_e[i];
 	}
-	
+
 	for(i=0; i<2*(length_r-1); i++){
 		// Find the outmost segment
 		phi0=atan2((centre_e-y1),(centre_b-x1));
 		phi_max=0.0;
-		
-		for(j=0;j<(length_r-1); j++){ 
+
+		for(j=0;j<(length_r-1); j++){
 			if(dev_array_b[j]==0 && dev_array_e[j]!=0){ //x=const
 				x2=x1;
 				x3=x1;
 				y2=y1+(-1)*eps_vec[j]*dev_array_e[j];
 				y3=y1+(-2)*eps_vec[j]*dev_array_e[j];
-				
+
 				phi=atan2((y3-y1),(x3-x1))-phi0;
 				if(phi>phi_max && phi>0 && phi<pi){
 					phi_max=phi;
 					last_eps=j;
 				}
-				
+
 			}
 			else if(dev_array_b[j]!=0 && dev_array_e[j]==0){ //y=const
 				y2=y1;
 				y3=y1;
 				x2=x1+(-1)*eps_vec[j]*dev_array_b[j];
 				x3=x1+(-2)*eps_vec[j]*dev_array_b[j];
-				
+
 				phi=atan2((y3-y1),(x3-x1))-phi0;
 				if(phi>phi_max && phi>0 && phi<pi){
 					phi_max=phi;
 					last_eps=j;
 				}
 			}
-			else{	
+			else{
 				x2=x1+(-1)*eps_vec[j]*dev_array_b[j];
 				x3=x1+(-2)*eps_vec[j]*dev_array_b[j];
 				y2=y1+(-1)*eps_vec[j]*dev_array_e[j];
 				y3=y1+(-2)*eps_vec[j]*dev_array_e[j];
-				
+
 				phi=atan2((y3-y1),(x3-x1))-phi0;
 				if(phi>phi_max && phi>0 && phi<pi){
 					phi_max=phi;
@@ -778,16 +778,16 @@ AAF aaf_pow(const AAF & base, const AAF & exp) {
 				}
 			}
 		}
-		
+
 		x2=x1+(-1)*eps_vec[last_eps]*dev_array_b[last_eps];
 		x3=x1+(-2)*eps_vec[last_eps]*dev_array_b[last_eps];
 		y2=y1+(-1)*eps_vec[last_eps]*dev_array_e[last_eps];
 		y3=y1+(-2)*eps_vec[last_eps]*dev_array_e[last_eps];
-		
+
 		d1=fc+fx*(x1-centre_b)+fy*(y1-centre_e)-pow(x1,y1);
 		d2=fc+fx*(x2-centre_b)+fy*(y2-centre_e)-pow(x2,y2);
 		d3=fc+fx*(x3-centre_b)+fy*(y3-centre_e)-pow(x3,y3);
-		
+
 		if((d1<d2) && (d2<d3)){
 			if(i==0) {
 				dmin=d1;
@@ -850,46 +850,46 @@ AAF aaf_pow(const AAF & base, const AAF & exp) {
 				else if(d1>d3 && d3<dmin) dmin=d3;
 			}
 		}
-		
+
 		x1=x3;
 		y1=y3;
 		eps_vec[last_eps]=(-1)*eps_vec[last_eps];
-		
+
 		for(j=0;j<length_r-1;j++){
 		}
 	}
-	
+
 // Calculate the shift of the centre and the new deviation
 	alpha=(dmax+dmin)/2;
 	gamma=(dmax-dmin)/2;
-	
+
 	fprintf(stdout, "alpha: %f, gamma: %f\n", alpha, gamma);
-	
+
 	AAF result(pow(centre_b,centre_e)+alpha);
-	
+
 	result.length=length_r;
 	result.size=length_r;
 	result.indexes=new unsigned[length_r];
 	result.deviations=new double[length_r];
-	
+
 	devs_r=result.deviations;
 	ind_r=result.indexes;
-	
+
 	for(i=0; i<(length_r-1); i++){
 		ind_r[i]=help[i];
 		devs_r[i]=fx*dev_array_b[i]+fy*dev_array_e[i];
 		fprintf(stdout, "index: %d, devb: %f, deve: %f\n", help[i], dev_array_b[i], dev_array_e[i]);
 	}
-	
+
 	result.indexes[length_r-1]=result.inclast();
 	result.deviations[length_r-1]=gamma;
-	
+
 #ifdef FAST_RAD
 	result.radius = 0.0;
 	for (unsigned i = 0; i < length_r; i++)
 		result.radius += fabs(result.deviations[i]);
 #endif
-	
+
 	//std::cout << result << std::endl;
 	return result;
 }
@@ -1089,7 +1089,7 @@ AAF aaf_pow(const double & base, const AAF & exp) {
 /************************************************************
  * Method:        sqrt
  * Author & Date: ??? - ???
- * Description:   
+ * Description:
  *   This function computes the square root
  *
  *   Input  : const AAF & : AAF argument
@@ -1116,8 +1116,8 @@ AAF sqrt(const AAF & P)
   // check lower bound
   if (a < EPSILON)
   {
-    throw(AAF_Exception(AAF_NEGROOT_EXCEPTION, 
-			std::string("Error <AAF::sqrt>: computing negative root").c_str(), 
+    throw(AAF_Exception(AAF_NEGROOT_EXCEPTION,
+			std::string("Error <AAF::sqrt>: computing negative root").c_str(),
 			a, b));
   }
 
@@ -1152,21 +1152,21 @@ AAF sqrt(const AAF & P)
     //cout << "dzeta : " << dzeta << " , delta : " << delta << " , alpha : " << alpha << endl;
 
     //t = 0.25*fa*fb*alpha;
-    
+
     //u = 0.125*(a + b)*alpha;
-    
+
     // dzeta calculation:
     //dzeta = u + 3.0*t;
-    
+
     // Calculation of the error
     //delta = u - t;
   }
   else if (AAF::approximationType == MINRANGE)
-  {       
+  {
     alpha = 1.0/(2.0*fb);
 
     delta = 0.5*alpha*(a-2*fb*fa+b);
-    
+
     dzeta = 0.5*fb-delta;
   }
   else // (AAF::approximationType == SECANT)
@@ -1184,25 +1184,25 @@ AAF sqrt(const AAF & P)
   }
 
   AAF Temp(alpha*(P.cvalue)+dzeta);
-  
+
   Temp.length=(P.length)+1;
   Temp.size = Temp.length;
   Temp.deviations = new double [Temp.size];
   Temp.indexes = new unsigned [Temp.size];
-  
+
   // zi = alpha*xi
-  
+
   for (unsigned j=0; j < P.length; j++)
   {
     Temp.indexes[j]=P.indexes[j];
     Temp.deviations[j]=alpha*(P.deviations[j]);
   }
-  
+
   // zk = delta
-  
+
   Temp.indexes[P.length]=Temp.inclast();   // the error indx
   Temp.deviations[P.length]=delta;
-  
+
   return Temp;
 
 //   // z0 = alpha*x0 + dzeta
@@ -1221,8 +1221,8 @@ AAF sqrt(const AAF & P)
 //     Temp.indexes[i] = P.indexes[i];
 //     Temp.deviations[i] = alpha*(P.deviations[i]);
 //   }
-  
-//   // Compute the error --> delta in a new deviation symbol 
+
+//   // Compute the error --> delta in a new deviation symbol
 //   Temp.indexes[P.length] = Temp.inclast();
 //   Temp.deviations[P.length] = delta;
 
@@ -1237,7 +1237,7 @@ AAF sqrt(const AAF & P)
 /************************************************************
  * Method:        isqrt
  * Author & Date: Darius Grabowski - 03.02.2006
- * Description:   
+ * Description:
  *   This function computes the inverted square root
  *
  *   Input  : const AAF & : AAF argument
@@ -1264,8 +1264,8 @@ AAF isqrt(const AAF & P)
   // check bounds
   if ( (a < EPSILON) || (b < EPSILON) )
   {
-    throw(AAF_Exception(AAF_NEGROOT_EXCEPTION, 
-			std::string("Error <AAF::isqrt>: computing negative root").c_str(), 
+    throw(AAF_Exception(AAF_NEGROOT_EXCEPTION,
+			std::string("Error <AAF::isqrt>: computing negative root").c_str(),
 			a, b));
   }
 
@@ -1285,12 +1285,12 @@ AAF isqrt(const AAF & P)
     {
       alpha = -0.5*fb*fb*fb;
     }
-    
+
     // compute the point having the slope alpha
     x_ = pow((double)0.5*(a/fb + b/fa), (double)2/3);
-    
+
     delta = 0.5*(fa + alpha*(x_ - a) - 1.0/sqrt(x_));
-   
+
     // dzeta calculation:
     dzeta = fa - alpha*a - delta;
   }
@@ -1299,7 +1299,7 @@ AAF isqrt(const AAF & P)
     alpha = -0.5*fb*fb*fb;
 
     delta = 0.5*(fa - fb + alpha*(b - a));
-    
+
     dzeta = fa - alpha*a - delta;
   }
   else // (AAF::approximationType == SECANT)
@@ -1332,8 +1332,8 @@ AAF isqrt(const AAF & P)
     Temp.indexes[i] = P.indexes[i];
     Temp.deviations[i] = alpha*(P.deviations[i]);
   }
-  
-  // Compute the error --> delta in a new deviation symbol 
+
+  // Compute the error --> delta in a new deviation symbol
 
   Temp.indexes[P.length] = Temp.inclast();
   Temp.deviations[P.length] = delta;
@@ -1349,8 +1349,8 @@ AAF isqrt(const AAF & P)
 /************************************************************
  * Method:        inv
  * Author & Date: ??? - ???
- * Description:   
- *   This function computes the inverse 
+ * Description:
+ *   This function computes the inverse
  *
  *   Input  : const AAF & : AAF argument
  *   Output : AAF         : AAF result
@@ -1375,8 +1375,8 @@ AAF inv(const AAF & P)
 
   if (a*b < EPSILON)
   {
-    throw(AAF_Exception(AAF_DIVZERO_EXCEPTION, 
-    			std::string("Error <AAF::inv>: computing zero inversion").c_str(), 
+    throw(AAF_Exception(AAF_DIVZERO_EXCEPTION,
+    			std::string("Error <AAF::inv>: computing zero inversion").c_str(),
 			a, b));
   }
 
@@ -1385,7 +1385,7 @@ AAF inv(const AAF & P)
 
   if (AAF::approximationType == CHEBYSHEV)
   {
-    alpha = -fa*fb;    
+    alpha = -fa*fb;
     double u = sqrt(a*b);
 
     if (a > 0)
@@ -1398,7 +1398,7 @@ AAF inv(const AAF & P)
       delta = -0.5*(fa+fb+2.0/u);
       dzeta = fa+fb+delta;
     }
-    
+
 #ifdef AAF_DEBUG
     fprintf(stdout, "Function: inv(x)\n");
     fprintf(stdout, "Interval: [%f, %f]\n", a, b);
@@ -1417,7 +1417,7 @@ AAF inv(const AAF & P)
       // y_a = fa - alpha*a;
       // y_b = fb - alpha*b = 2.0*fb;
       y_a = fa - alpha*a;
-      y_b = 2.0*fb;     
+      y_b = 2.0*fb;
     }
     else
     {
@@ -1459,8 +1459,8 @@ AAF inv(const AAF & P)
   {
     Temp.indexes[i] = P.indexes[i];
     Temp.deviations[i] = alpha*(P.deviations[i]);
-  }  
-  
+  }
+
   // Compute the error in a new deviation symbol
   // zk = delta
   Temp.indexes[P.length] = Temp.inclast();
@@ -1477,7 +1477,7 @@ AAF inv(const AAF & P)
 /************************************************************
  * Method:        exp
  * Author & Date: ??? - ???
- * Description:   
+ * Description:
  *   This function computes the exponential fct.
  *
  *   Input  : const AAF & : AAF argument
@@ -1511,9 +1511,9 @@ AAF exp(const AAF &P)
   }
 
   // Derivative of exp(x) is exp(x)
-  fa = exp(a); 
-  fb = exp(b);  
-  
+  fa = exp(a);
+  fb = exp(b);
+
   if (AAF::approximationType == CHEBYSHEV)
   {
     // use Chebyshev approximation
@@ -1525,13 +1525,13 @@ AAF exp(const AAF &P)
     {
       alpha = fa;
     }
-    
+
     double u = log(alpha);
-    
+
     delta = 0.5*(fa+(u-a-1.0)*alpha);
-    
+
     dzeta = fa-a*alpha-delta;
-    
+
     if ( (fa - 2.0*delta) < 0.0)
       chebyshevFailed = true;
 
@@ -1547,7 +1547,7 @@ AAF exp(const AAF &P)
   {
     // use MinRange approximation
     alpha = fa;
-  
+
     dzeta = 0.5*(fa+fb-alpha*(a+b));
 
     delta = 0.5*(fb-fa-alpha*(b-a));
@@ -1582,8 +1582,8 @@ AAF exp(const AAF &P)
     Temp.indexes[i] = P.indexes[i];
     Temp.deviations[i] = alpha*(P.deviations[i]);
   }
-    
-  // Compute the error in a new deviation symbol 
+
+  // Compute the error in a new deviation symbol
   // zk = delta
   Temp.indexes[P.length] = Temp.inclast();
   Temp.deviations[P.length] = delta;
@@ -1591,7 +1591,7 @@ AAF exp(const AAF &P)
 #ifdef FAST_RAD
   Temp.radius = fabs(alpha) * P.radius + fabs(delta);
 #endif
-
+  // fprintf(stdout, "Interval: [%f, %f]\n", Temp.getMin(), Temp.getMax());
   return Temp;
 }
 
@@ -1599,7 +1599,7 @@ AAF exp(const AAF &P)
 /************************************************************
  * Method:        log
  * Author & Date: Darius Grabowski - 10.10.2005
- * Description:   
+ * Description:
  *   computes the natural logarithm function
  *
  *   Input  : const AAF & : AAF argument
@@ -1617,7 +1617,7 @@ AAF log(const AAF &P)
     AAF Temp(log(P.cvalue));
     return Temp;
   }
-  
+
   r = P.rad();
 
   a = P.cvalue - r;
@@ -1625,13 +1625,13 @@ AAF log(const AAF &P)
 
   if ( (a < EPSILON) || (b < EPSILON) )
   {
-    throw(AAF_Exception(AAF_NEGLOG_EXCEPTION, 
-			std::string("Error <log(AAF)>: computing negative log").c_str(), 
+    throw(AAF_Exception(AAF_NEGLOG_EXCEPTION,
+			std::string("Error <log(AAF)>: computing negative log").c_str(),
 			a, b));
   }
 
-  // Derivative of log(x) is 1.0/x  
-  
+  // Derivative of log(x) is 1.0/x
+
   fa = log(a);
   fb = log(b);
 
@@ -1646,7 +1646,7 @@ AAF log(const AAF &P)
     {
       alpha = 1.0/a;
     }
-   
+
     double u = 1.0/alpha;
     double fu = log(u);
 
@@ -1654,11 +1654,11 @@ AAF log(const AAF &P)
     double y_2 = fb - alpha*b;
 
     delta = 0.5*(y_1 - y_2);
-    
-    // dzeta = 0.5*(y_1 + y_2); 
+
+    // dzeta = 0.5*(y_1 + y_2);
     dzeta = y_1 - delta;
-    
-    
+
+
 #ifdef AAF_DEBUG
     fprintf(stdout, "Function: log(x)\n");
     fprintf(stdout, "Interval: [%f, %f]\n", a, b);
@@ -1669,12 +1669,12 @@ AAF log(const AAF &P)
   }
   else if (AAF::approximationType == MINRANGE)
   {
-    // use MinRange approximation    
+    // use MinRange approximation
     alpha = 1.0/b;
-  
+
     delta = 0.5*(fb-fa-alpha*(b-a));
-    
-    dzeta = fb-1.0-delta;    
+
+    dzeta = fb-1.0-delta;
   }
   else // (AAF::approximationType == SECANT)
   {
@@ -1705,12 +1705,12 @@ AAF log(const AAF &P)
     Temp.indexes[i] = P.indexes[i];
     Temp.deviations[i] = alpha*(P.deviations[i]);
   }
-  
-  // Compute the error in a new deviation symbol  
+
+  // Compute the error in a new deviation symbol
   // zk = delta
   Temp.indexes[P.length] = Temp.inclast();
   Temp.deviations[P.length] = delta;
-  
+
 #ifdef FAST_RAD
   Temp.radius = fabs(alpha) * P.radius + fabs(delta);
 #endif
@@ -1722,7 +1722,7 @@ AAF log(const AAF &P)
 /************************************************************
  * Method:        logexp
  * Author & Date: Darius Grabowski - 10.10.2005
- * Description:   
+ * Description:
  *   computes the chained function log(1.0 + exp(x))
  *
  *   Input  : const AAF & : AAF argument
@@ -1740,7 +1740,7 @@ AAF logexp(const AAF &P)
     AAF Temp(log(1.0 + exp(P.cvalue)));
     return Temp;
   }
-  
+
   r = P.rad();
 
   a = P.cvalue - r;
@@ -1770,17 +1770,17 @@ AAF logexp(const AAF &P)
     {
       alpha = exp(a)/(1.0 + exp(a));
     }
-   
+
     if (alpha < 1E-15)
       alpha = 1E-15;
-    
+
     double u, fu;
 
     if (alpha > 1.0-1E-15)
     {
       u = 0.5*(a+b);
       fu = log(1.0 + exp(u));
-    } 
+    }
     else
     {
       u = log(alpha/(1.0 - alpha));
@@ -1788,7 +1788,7 @@ AAF logexp(const AAF &P)
     }
 
     delta = 0.5*(fa - fu - alpha*(a - u));
-    
+
     dzeta = fa - alpha*a - delta;
 
 #ifdef AAF_DEBUG
@@ -1806,10 +1806,10 @@ AAF logexp(const AAF &P)
 
     double y_a = fa - alpha*a;
     double y_b = fb - alpha*b;
-  
+
     delta = 0.5*(y_b - y_a);
-    
-    dzeta = 0.5*(y_b + y_a);    
+
+    dzeta = 0.5*(y_b + y_a);
   }
   else // (AAF::approximationType == SECANT)
   {
@@ -1840,8 +1840,8 @@ AAF logexp(const AAF &P)
     Temp.indexes[i] = P.indexes[i];
     Temp.deviations[i] = alpha*(P.deviations[i]);
   }
-  
-  // Compute the error in a new deviation symbol  
+
+  // Compute the error in a new deviation symbol
   // zk = delta
   Temp.indexes[P.length] = Temp.inclast();
   Temp.deviations[P.length] = delta;
@@ -1849,16 +1849,16 @@ AAF logexp(const AAF &P)
 #ifdef FAST_RAD
   Temp.radius = fabs(alpha) * P.radius + fabs(delta);
 #endif
-  
+
   return Temp;
 }
 
 /************************************************************
  * Method:        atan
  * Author & Date: Darius Grabowski - 10.06.2005
- * Description:   
+ * Description:
  *   Computes the arcus tangens function
- *   The atan function is strictly monotonic increasing but it 
+ *   The atan function is strictly monotonic increasing but it
  *   has two possible turning points which has to be considered
  *   for the Chebyshev approxiamtion
  *
@@ -1870,7 +1870,7 @@ AAF atan(const AAF &P)
   double a, b;
   double fa, fb;
   double r;
-  double alpha, dzeta, delta;  
+  double alpha, dzeta, delta;
 
   if (P.length == 0)
   {
@@ -1898,7 +1898,7 @@ AAF atan(const AAF &P)
     {
       alpha = 1.0/(1.0+a*b);
     }
-    
+
     // we have two points having the slope alpha
     double x_1 = -sqrt((1-alpha)/alpha);
     double x_2 = -x_1;
@@ -1930,9 +1930,9 @@ AAF atan(const AAF &P)
 
     double y_2 = fx_2 - alpha*x_2;
     double y_1 = fx_1 - alpha*x_1;
-    
+
     delta = 0.5*(y_2 - y_1);
-    
+
     dzeta = 0.5*(y_2 + y_1);
 
 #ifdef AAF_DEBUG
@@ -1946,7 +1946,7 @@ AAF atan(const AAF &P)
   }
   else if (AAF::approximationType == MINRANGE)
   {
-    // use MinRange approximation    
+    // use MinRange approximation
     if (fabs(b) > fabs(a))
     {
       alpha = 1.0/(1.0+b*b);
@@ -1955,10 +1955,10 @@ AAF atan(const AAF &P)
     {
       alpha = 1.0/(1.0+a*a);
     }
-  
+
     double y0_a = fa-alpha*a;
     double y0_b = fb-alpha*b;
-    
+
     dzeta = 0.5*(y0_b + y0_a);
 
     delta = 0.5*(y0_b - y0_a);
@@ -1990,8 +1990,8 @@ AAF atan(const AAF &P)
   {
     Temp.indexes[i] = P.indexes[i];
     Temp.deviations[i] = alpha*(P.deviations[i]);
-  }  
-  
+  }
+
   // Compute the error in a new deviation symbol
   // zk = delta
   Temp.indexes[P.length] = Temp.inclast();
@@ -2007,10 +2007,10 @@ AAF atan(const AAF &P)
 /************************************************************
  * Method:        tanh
  * Author & Date: Darius Grabowski - 10.10.2005
- * Description:   
+ * Description:
  *   computes the tangens hyperbolicus function
  *   Definition: tanh(x) := (exp(x)-exp(-x))/(exp(x)+exp(-x))
- *   The tanh function is strictly monotonic increasing but it 
+ *   The tanh function is strictly monotonic increasing but it
  *   has two possible turning points which has to be considered
  *   for the Chebyshev approximation
  *
@@ -2019,10 +2019,11 @@ AAF atan(const AAF &P)
  ************************************************************/
 AAF tanh(const AAF &P)
 {
+  fprintf(stdout, "Function: tanh(x)\n");
   double a, b;
   double fa, fb;
   double r;
-  double alpha, dzeta, delta;  
+  double alpha, dzeta, delta;
 
   if (P.length == 0)
   {
@@ -2051,7 +2052,7 @@ AAF tanh(const AAF &P)
     {
       alpha = 1.0-fa*fb;
     }
-    
+
     // we have two points having the slope alpha
     double dSqrtAlpha = sqrt(1-alpha);
     double x_1 = -atanh(dSqrtAlpha);
@@ -2084,9 +2085,9 @@ AAF tanh(const AAF &P)
 
     double y_2 = fx_2 - alpha*x_2;
     double y_1 = fx_1 - alpha*x_1;
-    
+
     delta = 0.5*(y_2 - y_1);
-    
+
     dzeta = 0.5*(y_2 + y_1);
 
 #ifdef AAF_DEBUG
@@ -2100,7 +2101,7 @@ AAF tanh(const AAF &P)
   }
   else if (AAF::approximationType == MINRANGE)
   {
-    // use MinRange approximation    
+    // use MinRange approximation
     if (fabs(fb) > fabs(fa))
     {
       alpha = 1.0-fb*fb;
@@ -2109,10 +2110,10 @@ AAF tanh(const AAF &P)
     {
       alpha = 1.0-fa*fa;
     }
-  
+
     double y0_a = fa-alpha*a;
     double y0_b = fb-alpha*b;
-    
+
     dzeta = 0.5*(y0_b + y0_a);
 
     delta = 0.5*(y0_b - y0_a);
@@ -2147,9 +2148,9 @@ AAF tanh(const AAF &P)
     Temp.indexes[i] = P.indexes[i];
     Temp.deviations[i] = alpha*(P.deviations[i]);
   }
-  
-  
-  // Compute the error in a new deviation symbol  
+
+
+  // Compute the error in a new deviation symbol
   // zk = delta
   Temp.indexes[P.length] = Temp.inclast();
   Temp.deviations[P.length] = delta;
@@ -2161,11 +2162,155 @@ AAF tanh(const AAF &P)
   return Temp;
 }
 
+AAF tanh_test(const AAF &P)
+{
+  // fprintf(stdout, "Function: tanh(x)\n");
+  double a, b;
+  double fa, fb;
+  double r;
+  double alpha, dzeta, delta;
+
+  if (P.length == 0)
+  {
+    AAF Temp(tanh(P.cvalue));
+    return Temp;
+  }
+
+  r = P.rad();
+
+  a = P.cvalue - r;
+  b = P.cvalue + r;
+
+  // Derivative of tanh(x) is 1.0-tanh(x)^2
+
+  fa = tanh(a);
+  fb = tanh(b);
+
+  if (AAF::approximationType == CHEBYSHEV)
+  {
+    // use Chebyshev approximation
+    if (r > AAF_MINRAD)
+    {
+      alpha = (fb-fa)/(b-a);
+    }
+    else
+    {
+      alpha = 1.0-fa*fb;
+    }
+
+    // we have two points having the slope alpha
+    double dSqrtAlpha = sqrt(1-alpha);
+    double x_1 = -atanh(dSqrtAlpha);
+    double x_2 = -x_1;
+
+    double fx_1, fx_2;
+
+    // check valid points
+    if (x_1 > a)
+    {
+      // x_1 is valid
+      fx_1 = -dSqrtAlpha;
+    }
+    else
+    {
+      x_1 = a;
+      fx_1 = fa;
+    }
+
+    if (x_2 < b)
+    {
+      // x_2 is valid
+      fx_2 = dSqrtAlpha;
+    }
+    else
+    {
+      x_2 = b;
+      fx_2 = fb;
+    }
+
+    double y_2 = fx_2 - alpha*x_2;
+    double y_1 = fx_1 - alpha*x_1;
+
+    delta = 0.5*(y_2 - y_1);
+
+    dzeta = 0.5*(y_2 + y_1);
+
+#ifdef AAF_DEBUG
+    fprintf(stdout, "Function: tanh(x)\n");
+    fprintf(stdout, "Interval: [%f, %f]\n", a, b);
+    fprintf(stdout, "f(Interval): [%f, %f]\n", fa, fb);
+    fprintf(stdout, "x_1: %f, f(x_1): %f\n", x_1, fx_1);
+    fprintf(stdout, "x_2: %f, f(x_2): %f\n", x_2, fx_2);
+    fprintf(stdout, "alpha: %f, delta: %f, dzeta: %f\n", alpha, delta, dzeta);
+#endif
+  }
+  else if (AAF::approximationType == MINRANGE)
+  {
+    // use MinRange approximation
+    if (fabs(fb) > fabs(fa))
+    {
+      alpha = 1.0-fb*fb;
+    }
+    else
+    {
+      alpha = 1.0-fa*fa;
+    }
+
+    double y0_a = fa-alpha*a;
+    double y0_b = fb-alpha*b;
+
+    dzeta = 0.5*(y0_b + y0_a);
+
+    delta = 0.5*(y0_b - y0_a);
+  }
+  else // (AAF::approximationType == SECANT)
+  {
+    if (r > AAF_MINRAD)
+    {
+      alpha = (fb-fa)/(b-a);
+    }
+    else
+    {
+      alpha = 1.0-fa*fb;
+    }
+    dzeta = fa - alpha*a;
+    delta = 0.;
+  }
+
+  // z0 = alpha*x0 + dzeta
+
+  AAF Temp(alpha*(P.cvalue) + dzeta);
+
+  Temp.length = P.length + 1;
+  Temp.size = Temp.length;
+  Temp.deviations = new double [Temp.size];
+  Temp.indexes = new unsigned [Temp.size];
+
+  // zi = alpha*xi
+
+  for (unsigned i = 0; i < P.length; i++)
+  {
+    Temp.indexes[i] = P.indexes[i];
+    Temp.deviations[i] = alpha*(P.deviations[i]);
+  }
+
+
+  // Compute the error in a new deviation symbol
+  // zk = delta
+  Temp.indexes[P.length] = Temp.inclast();
+  Temp.deviations[P.length] = delta;
+
+#ifdef FAST_RAD
+  Temp.radius = fabs(alpha) * P.radius + fabs(delta);
+#endif
+
+  return Temp;
+}
 
 /************************************************************
  * Method:        heaviside
  * Author & Date: Darius Grabowski - 10.12.2005
- * Description:   
+ * Description:
  *   computes a simplified heaviside function
  *
  *   Input  : const AAF & : AAF argument

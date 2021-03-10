@@ -81,7 +81,7 @@ class AAF
 #endif
 
  public:
-  
+
   // constructors
   AAF(double v0 = 0.0);
   AAF(double, const double *, const unsigned *, unsigned);
@@ -126,25 +126,25 @@ class AAF
   AAF operator ^ (const AAF) const;
 
   friend std::ostream & operator << (std::ostream &, const AAF &);
- 
+
   unsigned getlength() const;
   double getcenter() const;
 
   AAInterval convert() const;
-    
-    
+
+
     // concretization
     interval convert_int() const;
     interval convert_int(vector<interval> &constr_eps, int sysdim) const;
     // concretization, given constraints on the noise symbols up to sysdim
-    
+
     // suppose we have some constraints on the noise symbols eps_i, given by some affine forms being <= 0
     interval convert_int(vector<AAF> &constraints, int sysdim) const;
-    
+
     void reduce_aaf(interval I);
     interval rad(vector<interval> &constr_eps, int sysdim) const;
 
-    
+
   double rad() const;
   double getMax() const;
   double getMin() const;
@@ -152,11 +152,11 @@ class AAF
   double getAbsMin() const;
   unsigned getFirstIndex(void) const;
   unsigned getLastIndex(void) const;
-  
+
     void compact(void);
     void sumup(double);
 unsigned sumup(unsigned);
-    
+
 #ifdef USE_AAF_EXTENSIONS
   // special methods declared in aa_aafspecial.c
 #ifdef USE_QPF
@@ -167,7 +167,7 @@ unsigned sumup(unsigned);
   void getPD(double *, unsigned, unsigned, unsigned npp = 1);
   void getAt(double *, unsigned, unsigned, unsigned npp = 1);
   void update(double *, unsigned, unsigned npp = 1);
-  
+
   void sumupall(void);
   void resize(void) {resize(getLastIndex()-1);};
   void resize(unsigned int);
@@ -202,6 +202,7 @@ unsigned sumup(unsigned);
   friend AAF logexp(const AAF &);
   friend AAF atan(const AAF &);
   friend AAF tanh(const AAF &);
+  friend AAF tanh_test(const AAF &);
   friend AAF inv(const AAF &);
   friend AAF sin(const AAF &);
   friend AAF cos(const AAF &);
@@ -216,11 +217,11 @@ unsigned sumup(unsigned);
   friend AAF mag(const AAF &, const AAF &);
   friend AAF magdb(AAF &, AAF &);
 #endif
-    
-    // Sylvie 
+
+    // Sylvie
   // multiplication, given some constraints on noise symbols
    friend AAF mult_eps (const AAF & P1, const AAF & P2, vector<interval> &constr_eps, int sysdim);
-   // hull of 2 affine forms ("argmin" formula) 
+   // hull of 2 affine forms ("argmin" formula)
    friend AAF hull  (const AAF & P1, const AAF & P2);
    // end Sylvie
 
@@ -249,6 +250,7 @@ AAF log(const AAF &);
 AAF logexp(const AAF &);
 AAF atan(const AAF &);
 AAF tanh(const AAF &);
+AAF tanh_test(const AAF &);
 AAF heaviside(const AAF &);
 
 #ifdef USE_AAF_EXTENSIONS
@@ -264,8 +266,8 @@ AAF magdb(AAF &, AAF &);
 /************************************************************
  * Method:        getcenter
  * Author & Date: ??? - ???
- * Description:   
- *   Returns the central value of the AAF 
+ * Description:
+ *   Returns the central value of the AAF
  *
  *   Input  : -
  *   Output : double : center value
@@ -279,7 +281,7 @@ inline double AAF::getcenter() const
 /************************************************************
  * Method:        power
  * Author & Date: Darius Grabowski - 10.05.2005
- * Description:   
+ * Description:
  *   Computes the power fct.
  *
  *   Input  : const AAF & : AAF argument
@@ -295,7 +297,7 @@ inline AAF power(const AAF & P, int exp)
 /************************************************************
  * Method:        sqr
  * Author & Date: Darius Grabowski - 10.05.2005
- * Description:   
+ * Description:
  *   Computes the square fct.
  *
  *   Input  : const AAF & : AAF argument
@@ -310,7 +312,7 @@ inline AAF sqr(const AAF & P)
 /************************************************************
  * Method:        pow
  * Author & Date: Darius Grabowski - 10.05.2005
- * Description:   
+ * Description:
  *   Computes the power fct.
  *
  *   Input  : const AAF & : AAF argument
@@ -326,8 +328,8 @@ inline AAF pow(const AAF & P, int exp)
 /************************************************************
  * Method:        setDefault
  * Author & Date: ??? - ???
- * Description:   
- *   sets the highest symbol, this function must be treaten 
+ * Description:
+ *   sets the highest symbol, this function must be treaten
  *   carefully !!!
  *
  *   Input  : unsigned : highest symbol index
@@ -343,13 +345,13 @@ inline void AAF::setDefault(const unsigned val)
 /************************************************************
  * Method:        getDefault
  * Author & Date: Darius Grabowski - 14.06.2005
- * Description:   
+ * Description:
  *   returns the highest symbol
  *
  *   Input  : -
  *   Output : unsigned : highest symbol in use
  ************************************************************/
-inline unsigned AAF::getDefault(void) 
+inline unsigned AAF::getDefault(void)
 {
   return last;
 }
@@ -357,7 +359,7 @@ inline unsigned AAF::getDefault(void)
 /************************************************************
  * Method:        inclast
  * Author & Date: ??? - ???
- * Description:   
+ * Description:
  *   increases the highest symbol
  *
  *   Input  : -
@@ -371,7 +373,7 @@ inline unsigned AAF::inclast()
 /************************************************************
  * Method:        getlength
  * Author & Date: ??? - ???
- * Description:   
+ * Description:
  *   returns the number of partial deviations
  *
  *   Input  : -
@@ -385,7 +387,7 @@ inline unsigned AAF::getlength() const
 /************************************************************
  * Method:        getFirstIndex
  * Author & Date: Darius Grabowski - 05/2005
- * Description:   
+ * Description:
  *   returns the index of the first deviation
  *
  *   Input  : -
@@ -403,7 +405,7 @@ inline unsigned AAF::getFirstIndex(void) const
 /************************************************************
  * Method:        getLastIndex
  * Author & Date: Darius Grabowski - 05/2005
- * Description:   
+ * Description:
  *   returns the index of the last deviation
  *
  *   Input  : -
@@ -421,7 +423,7 @@ inline unsigned AAF::getLastIndex(void) const
 /************************************************************
  * Method:        getApproximationType
  * Author & Date: Darius Grabowski - 05/2005
- * Description:   
+ * Description:
  *   returns the approximation type
  *
  *   Input  : -
@@ -435,7 +437,7 @@ inline tApproximationType AAF::getApproximationType(void)
 /************************************************************
  * Method:        setApproximationType
  * Author & Date: Darius Grabowski - 05/2005
- * Description:   
+ * Description:
  *   sets the approximation type
  *
  *   Input  : tApproximationType : approximation type
