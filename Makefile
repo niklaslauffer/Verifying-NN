@@ -5,8 +5,8 @@ INCLUDE = -I/usr/local/include -I$(CURRENT_DIR)/aaflib-0.1 -I.
 LFLAGS = -L/usr/local/lib -L$(CURRENT_DIR)/aaflib-0.1
 SRCS = DAG.cpp build_network.h
 LIBS = -lyaml-cpp -laaf -lprim -lgsl -llapack -lblas -lstdc++
-MAIN = mnist.cpp
-NAME = mnist
+MAIN = wildlife.cpp
+NAME = wildlife
 
 main :
 	$(CC) $(CFLAGS) -o $(NAME) $(MAIN) $(SRCS) $(INCLUDE) $(LFLAGS) $(LIBS)
