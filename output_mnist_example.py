@@ -10,11 +10,19 @@ x_test = x_test.astype('float32')
 x_train /= 255
 x_test /= 255
 
-index = 1
+index = 0
+target = 9
 
-print(y_train[index])
-with open("mnist_example.txt", "w") as f:
-    for i in x_train[index]:
-        f.write(str(i))
-        f.write("\n")
+while index < len(x_train):
+
+    class_type = y_train[index]
+    if class_type == target:
+        print(class_type)
+        with open("mnist_example" + str(target) + ".txt", "w") as f:
+            for i in x_train[index]:
+                f.write(str(i))
+                f.write("\n")
+
+        break
+    index += 1
 
