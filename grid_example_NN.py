@@ -1,5 +1,6 @@
 from bresenham import bresenham
 from itertools import product
+import pickle
 
 import numpy as np
 
@@ -63,10 +64,10 @@ def build_mdp_nn(nrows, ncols, actionList, objStates, objectTrans, obstacles):
                 nextStateAg = currStateAg #No transition if next state is an obstacle
             # Obtain the next states+ prob of each objects in the environment
             transProb = objectTrans(dictIndex, state, a, objStates, nrows, ncols)
-            newTransProb = list()
+            newTransProb = {}
             for (nextObj, prob) in transProb:
                 nextStateC = tuple([nextStateAg] + list(nextObj))
-                newTransProb.append((prob, nextStateC))
+                newTransProb[nextStateC] = prob
             dictTrans[(state, a)] = newTransProb
     return dictTrans, stateSpace
 
@@ -257,15 +258,17 @@ alphabet = [0,1,2,3] # North, south, west, east
 # objStates = {0 : [2*nrows + j for j in range(ncols)], 1 : [j*nrows + 8 for j in range(nrows)],
 #              2 : [8*nrows + j for j in range(ncols)]}
 # Object state spaces -> object 0 moves on row 6, object 1 moves on col 10, object 2 moves on row 14
-objStates = {0 : [2*nrows + j for j in range(ncols)], 1 : [j*nrows + 8 for j in range(nrows)]}
+# objStates = {0 : [2*nrows + j for j in range(ncols)], 1 : [j*nrows + 8 for j in range(nrows)]}
+objStates = {0 : [2*nrows + j for j in range(ncols)], 1 : [j*nrows + 8 for j in range(nrows)],
+             2 : [0*nrows + j for j in range(ncols)]} # object 2 goes along the diagonal
 typeList = [0,1] # Only three types
 observation = list(product(typeList, repeat=len(objStates)))
 
 # Construct the behavior of each object
-# typeProbs = {(0,0,0) : [0.8,0.8,0.8], (0,0,1) : [0.8,0.8,0.2], (0,1,0) : [0.8,0.2,0.8],
-#              (0,1,1) : [0.8,0.2,0.2], (1,0,0) : [0.2,0.8,0.8], (1,0,1) : [0.2,0.8,0.2],
-#              (1,1,0) : [0.2,0.2,0.8], (1,1,1) : [0.2,0.2,0.2]}
-typeProbs = {(0,0) : [0.8,0.8], (0,1) : [0.8,0.2], (1,0) : [0.2,0.8],(1,1) : [0.2,0.2]}
+typeProbs = {(0,0,0) : [0.8,0.8,0.8], (0,0,1) : [0.8,0.8,0.2], (0,1,0) : [0.8,0.2,0.8],
+             (0,1,1) : [0.8,0.2,0.2], (1,0,0) : [0.2,0.8,0.8], (1,0,1) : [0.2,0.8,0.2],
+             (1,1,0) : [0.2,0.2,0.8], (1,1,1) : [0.2,0.2,0.2]}
+# typeProbs = {(0,0) : [0.8,0.8], (0,1) : [0.8,0.2], (1,0) : [0.2,0.8],(1,1) : [0.2,0.2]}
 
 
 Cset, Sset = buildSetMDPs(nrows, ncols, alphabet, objStates, typeProbs, obstacles, observation, distMin=1)
@@ -283,5 +286,11 @@ Z = observation
 uncertainProb = readUncertainProbs(readFile='uncertain_class_out.txt')
 mapInput, mapDict = buildObservationTransitionNN(nrows, ncols, Sset, Cset, Z, obstacles, uncertainProb)
 
-for elem, val in mapDict.items():
-    print (elem, val)
+with open ("Cset_wildlife_10x10.pickle", "w") as f:
+    pickle.dump(Cset, f)
+
+with open ("observation_funct_wildlife_10x10.pickle", "w") as f:
+    pickle.dump(mapDict, f)
+
+# for elem, val in mapDict.items():
+#     print (elem, val)
