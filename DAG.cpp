@@ -73,7 +73,7 @@ template <> void Network<AAF>::Node::update_value(){
       break;
     case tanh_act:
       // std::cout << "tanh In: " << this->parents[0]->value << std::endl;
-      this->value = tanh_test(this->parents[0]->value) + this->bias;
+      this->value = tanh(this->parents[0]->value) + this->bias;
       assert(this->bias == 0);
       /* std::cout << "tanh Out: " << this->value << std::endl; */
       break;

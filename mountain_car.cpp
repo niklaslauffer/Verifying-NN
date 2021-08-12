@@ -14,7 +14,7 @@ int main () {
     // get a random number from [.4, .6]
     srand(time(NULL));
     double init_pos = low_bound + rand() / (RAND_MAX / (high_bound - low_bound));
-    std::cout << init_pos << std::endl;
+    /* std::cout << init_pos << std::endl; */
     double goal_pos = .45;
     int step_limit = 116;
 
@@ -43,7 +43,7 @@ int main () {
 
       // u = nn_output[0];
       u = nn_output[0].getcenter();
-      std::cout << "Control: " << u << std::endl;
+      /* std::cout << "Control: " << u << std::endl; */
 
       if (reached_goal) {
         std::cout << std::endl << "Success!" << std::endl;
